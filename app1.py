@@ -3,72 +3,41 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 import itertools
-import streamlit as st
-import pandas as pd
 import joblib, json
 import plotly.express as px
 from sklearn.decomposition import PCA
 import ast, re, os
 import networkx as nx
-
+import plotly.graph_objects as go
 
 # ----------------------------------
 # Page config & styles
 # ----------------------------------
 st.set_page_config(
-    page_title="Customer Segmentation & Cross-Sell Dashboard",
-    layout="wide",
+    page_title="Customer Segmentation & Cross-Sell Dashboard", layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Make titles + text scale nicely on mobile
 st.markdown("""
 <style>
     .metric-card {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        color: white;
-        text-align: center;
-        margin: 0.5rem 0;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);padding: 1rem;
+         border-radius: 10px; color: white; text-align: center; margin: 0.5rem 0;
     }
-    .stMetric > label {
-        font-size: 14px !important;
-        font-weight: bold;
-    }
+    .stMetric > label { font-size: 14px !important; font-weight: bold; }
     .main-header {
-        text-align: center;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 2rem;
+        text-align: center; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        font-size: 3rem; font-weight: bold; margin-bottom: 2rem;
     }
-    /* Hide Streamlit menu and footer */
-#MainMenu, footer {visibility: hidden;}
-
-/* Custom header style */
-.big-font {
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: #2E86C1;
-    text-align: center;
-    padding: 1rem 0;
-}
-
-/* Responsive layout for small screens */
-@media only screen and (max-width: 600px) {
-    .big-font {
-        font-size: 1.5rem !important;
+    #MainMenu, footer {visibility: hidden;}
+    .big-font { font-size: 2.2rem; font-weight: bold; color: #2E86C1; text-align: center; padding: 1rem 0; }
+    @media only screen and (max-width: 600px) {
+        .big-font { font-size: 1.5rem !important; }
+        .css-1d391kg, .css-18e3th9 { padding: 0.5rem !important; }
     }
-    .css-1d391kg, .css-18e3th9 {
-        padding: 0.5rem !important;
-    }
-}
 </style>
 """, unsafe_allow_html=True)
-
 
 with st.expander("### ℹ️ How to Use This Dashboard", expanded=True):
     st.markdown("""
@@ -87,7 +56,7 @@ kmeans = joblib.load("kmeans.pkl")
 pca    = joblib.load("pca.pkl")
 meta   = json.load(open("pca_meta.json"))
 
-# Prefer the exact features used during training if stored
+# Using the same features used during training on Colab
 features = meta.get("features", [
     "Recency","Frequency","Monetary","AvgOrderValue","UniqueProducts",
     "TotalTransactions","ProductDiversity","AvgItemPrice","ReturnsRate",
@@ -100,14 +69,13 @@ df = pd.read_csv("segmented_customers.csv")
 # Normalize/clean column names (no leading/trailing spaces)
 df.columns = df.columns.str.strip()
 
-# Common alias fixes (extend if needed)
+# Common alias fixes to avoid unexpected crashes 
 alias_map = {
     "Customer_Id": "CustomerID",
     "Customer Id": "CustomerID",
     "customer_id": "CustomerID",
 }
 df.rename(columns={k: v for k, v in alias_map.items() if k in df.columns}, inplace=True)
-
 print("Columns found:", df.columns.tolist())
 
 # ---- Validate required feature columns
@@ -138,10 +106,9 @@ clusters = kmeans.predict(X_scaled)  # clustering is on scaled space
 # ---- Attach predictions
 df["Cluster_Pred"] = clusters
 
+st.markdown("## Customer Segmentation Dashboard")
 
-st.title("Customer Segmentation Dashboard")
-
-# ---------- Build 3D PCA (for viz only if needed) ----------
+# ---------- Build 3D PCA ----------
 if hasattr(pca, "n_components_") and getattr(pca, "n_components_", 2) >= 3:
     X_plot3d = X_pca[:, :3]
     pca3_explained = getattr(pca, "explained_variance_ratio_", [0, 0, 0])[:3]
@@ -156,11 +123,11 @@ plot_df["PC2"] = X_pca[:, 1]
 plot_df["PC3"] = X_plot3d[:, 2] if X_plot3d.shape[1] >= 3 else 0.0
 plot_df["Cluster_Pred_str"] = plot_df["Cluster_Pred"].astype(str)
 
-# ---------- Simple KPIs (always visible) ----------
-kc1, kc2, kc3 = st.columns(3)
-kc1.metric("Total customers", f"{len(plot_df):,}")
-kc2.metric("Clusters", f"{plot_df['Cluster_Pred'].nunique()}")
-kc3.metric("Features used", f"{len(features)}")
+# ---------- Simple KPIs ----------
+k1, k2, k3 = st.columns(3)
+k1.metric("Total customers", f"{len(plot_df):,}")
+k2.metric("Clusters", f"{plot_df['Cluster_Pred'].nunique()}")
+k3.metric("Features used", f"{len(features)}")
 
 # ---------- TABS ----------
 tab1, tab2, tab3, tab4 = st.tabs([
@@ -173,8 +140,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 # ===== 1) Interactive Cluster Visualization (2D/3D) =====
 with tab1:
     st.subheader("Interactive Cluster Visualization")
-
-    # In-tab controls (no sidebar)
+    # In-tab controls 
     clusters_available = sorted(plot_df["Cluster_Pred"].unique().tolist())
     pick_clusters = st.multiselect(
         "Show clusters",
@@ -219,7 +185,7 @@ with tab2:
     st.dataframe(comp, use_container_width=True)
 
     metric_pick = st.selectbox(
-        "Compare one metric across clusters",
+        "Change the metric to reveal differences in customers’ behavior across clusters",
         options=[c for c in features if c in df.columns],
         index=0
     )
@@ -248,17 +214,9 @@ with tab3:
     extra = [c for c in features if c in view.columns]
     st.dataframe(view[cols_show + extra].head(topn), use_container_width=True)
 
-    st.download_button(
-        "⬇️ Download results (CSV)",
-        data=view[cols_show + extra].to_csv(index=False).encode("utf-8"),
-        file_name="customer_lookup_results.csv",
-        mime="text/csv"
-    )
-
 # ===== 4) Segment Statistics & Business Metrics =====
 with tab4:
     st.subheader("Segment Statistics & Business Metrics")
-
     # Build a simple revenue proxy
     if "Monetary" in df.columns:
         df["Revenue_Est"] = pd.to_numeric(df["Monetary"], errors="coerce")
@@ -279,7 +237,6 @@ with tab4:
     for c in ["Monetary", "Frequency", "Recency", "AvgOrderValue", "ReturnsRate", "DiscountUsage"]:
         if c in df.columns:
             agg_map[c] = "mean"
-
     kpi = df.groupby("Cluster_Pred").agg(agg_map).rename(columns={"Cluster_Pred": "Customers"}).reset_index()
 
     total_rev = kpi["Revenue_Est"].sum(skipna=True)
@@ -292,14 +249,6 @@ with tab4:
     kpi = kpi.rename(columns={"Cluster_Pred": "Cluster"})
     st.dataframe(kpi, use_container_width=True)
 
-    cA, cB = st.columns(2)
-    with cA:
-        fig_size = px.bar(kpi, x="Cluster", y="Customers", title="Customers per Cluster")
-        st.plotly_chart(fig_size, use_container_width=True)
-    with cB:
-        fig_rev = px.bar(kpi, x="Cluster", y="Revenue_Est", title="Estimated Revenue per Cluster")
-        st.plotly_chart(fig_rev, use_container_width=True)
-
     # Compare any numeric KPI
     numeric_cols = [c for c in kpi.columns if c not in ["Cluster"] and pd.api.types.is_numeric_dtype(kpi[c])]
     pick_kpi = st.selectbox("Compare KPI across clusters", options=numeric_cols, index=numeric_cols.index("Revenue_Share_%") if "Revenue_Share_%"
@@ -308,7 +257,7 @@ with tab4:
     st.plotly_chart(fig_any, use_container_width=True)
 
 # =========================
-# 🧺 Market Basket Analysis
+# Market Basket Analysis
 # =========================
 
 st.markdown("## 🧺 Market Basket Analysis Interface")
@@ -338,7 +287,6 @@ def _parse_itemset(cell):
 
 @st.cache_data
 def load_rules_and_freq(rules_csv="association_rules.csv", freq_csv="frequent_itemsets.csv"):
-    # ---- rules ----
     rules = pd.read_csv(rules_csv, engine="python")
     if rules.empty:
         raise ValueError("association_rules.csv loaded but has 0 rows.")
@@ -408,8 +356,8 @@ t1, t2, t3, t4 = st.tabs([
 # =========================================
 with t1:
     st.subheader("Association Rules Explorer")
-
-    # --- resolve real column names once ---
+    st.markdown("Filter the table by changing support, confidence, lift and N of lift")
+    # --- resolve real column names---
     def resolve_rule_cols(df: pd.DataFrame):
         m = {c.strip().lower(): c for c in df.columns}
         ante = m.get("antecedents") or m.get("lhs") or m.get("antecedent")
@@ -491,41 +439,11 @@ with t1:
                 if c in nice.columns]
         st.dataframe(nice[cols], use_container_width=True)
 
-        st.download_button(
-            "⬇️ Download filtered rules (CSV)",
-            data=nice[cols].to_csv(index=False).encode("utf-8"),
-            file_name="filtered_rules.csv",
-            mime="text/csv"
-        )
-
 # =========================================
 # 2) Product Recommendation Engine
 # =========================================
 with t2:
     st.subheader("Product Recommendation")
-
-    # --- resolve real column names and ensure sets (same as Tab 1) ---
-    def resolve_rule_cols(df: pd.DataFrame):
-        m = {c.strip().lower(): c for c in df.columns}
-        ante = m.get("antecedents") or m.get("lhs") or m.get("antecedent")
-        cons = m.get("consequents") or m.get("rhs") or m.get("consequent")
-        return ante, cons
-
-    ante_col, cons_col = resolve_rule_cols(rules)
-    if not ante_col or not cons_col:
-        st.error(f"Could not find antecedent/consequent columns in rules. Got: {list(rules.columns)}")
-        st.stop()
-
-    def _ensure_sets(v):
-        if isinstance(v, (set, frozenset, list, tuple)): return set(v)
-        if isinstance(v, str): return _parse_itemset(v)
-        return set()
-
-    if rules[ante_col].dtype == object:
-        rules[ante_col] = rules[ante_col].apply(_ensure_sets)
-    if rules[cons_col].dtype == object:
-        rules[cons_col] = rules[cons_col].apply(_ensure_sets)
-
     # --- UI ---
     c1, c2 = st.columns(2)
     with c1:
@@ -538,7 +456,7 @@ with t2:
         # Always return these columns
         cols = ["recommendation", "confidence", "lift", "support"]
 
-        # Cold-start: no items selected
+        # Starters if not item selected
         if not items:
             # Prefer singletons from frequent itemsets if available
             if (isinstance(freq_df, pd.DataFrame) 
@@ -567,7 +485,6 @@ with t2:
                          .sort_values("support", ascending=False).head(k))
                 out["confidence"] = np.nan; out["lift"] = np.nan
                 return out[cols]
-
             return pd.DataFrame(columns=cols)
 
         # Non-empty basket: match rules where antecedents ⊆ basket
@@ -609,7 +526,6 @@ with t2:
 
     # --- run & show ---
     rec_df = recommend(selected, rules, freq, ante_col, cons_col, k=15, strategy=strategy)
-
     if rec_df.empty:
         if selected:
             st.info("No recommendations for this basket under current rules. Try adding a different item or mining with lower thresholds.")
@@ -630,26 +546,6 @@ with t2:
 # =========================================
 with t3:
     st.subheader("Interactive Rule Visualizations")
-
-    # resolve real column names & ensure set types (same pattern as t1/t2)
-    def resolve_rule_cols(df: pd.DataFrame):
-        m = {c.strip().lower(): c for c in df.columns}
-        return (m.get("antecedents") or m.get("lhs") or m.get("antecedent"),
-                (m.get("consequents") or m.get("rhs") or m.get("consequent")))
-
-    ante_col, cons_col = resolve_rule_cols(rules)
-    if not ante_col or not cons_col:
-        st.error(f"Could not find antecedent/consequent columns. Got: {list(rules.columns)}")
-        st.stop()
-
-    def _ensure_sets(v):
-        if isinstance(v, (set, frozenset, list, tuple)): return set(v)
-        if isinstance(v, str): return _parse_itemset(v)
-        return set()
-
-    if rules[ante_col].dtype == object: rules[ante_col] = rules[ante_col].apply(_ensure_sets)
-    if rules[cons_col].dtype == object: rules[cons_col] = rules[cons_col].apply(_ensure_sets)
-
     # UI (low defaults to actually show something)
     g1, g2, g3 = st.columns(3)
     with g1:
@@ -670,11 +566,7 @@ with t3:
                         .copy())
 
     st.caption(f"Rules selected for graph: {len(graph_rules)}")
-
     # --- Network graph (items as nodes; rules create edges A->B) ---
-    import networkx as nx
-    import plotly.graph_objects as go
-
     G = nx.DiGraph()
     for _, r in graph_rules.iterrows():
         for a in r[ante_col]:
@@ -735,7 +627,6 @@ with t3:
 # =========================================
 with t4:
     st.subheader("Support / Confidence / Lift Analysis")
-
     if {"support","confidence","lift"}.issubset(rules.columns):
         a1, a2 = st.columns(2)
         with a1:
@@ -761,7 +652,6 @@ with t4:
         )
     else:
         st.info("Rules file missing required metric columns to plot (need support, confidence, lift).")
-
 
 st.markdown("## 📈 Business Intelligence Summary")
 # ===== BI data bootstrap (put this ABOVE the BI tabs) =====
@@ -879,7 +769,6 @@ def persona_actions(metrics: dict):
     return label, recs
 
 def kpi_value(x, fmt="{:.2f}"):
-    import numpy as np
     return (fmt.format(x) if isinstance(x, (int,float)) and not np.isnan(x) else "—")
 
 # ------------------------------------------------------------------------------
@@ -891,7 +780,6 @@ tab_overview, tab_personas, tab_pairs, tab_roi = st.tabs(
 
 # ============== OVERVIEW =================
 with tab_overview: 
-    
     # KPIs
     n_personas = len(personas)
     n_pairs = len(pairs) if isinstance(pairs, pd.DataFrame) else 0
@@ -903,12 +791,10 @@ with tab_overview:
     k2.metric("Cross-sell pairs", f"{n_pairs}")
     k3.metric("Multi-item share", kpi_value(multi_item_share, "{:.1%}"))
     k4.metric("Avg basket size",  kpi_value(avg_basket_size,  "{:.2f}"))
-
     # -------------------
     # Executive Summary (polished)
     # -------------------
     st.markdown("### Executive Summary")
-
     # Safe helpers
     def _fmt_pct(x, digs=2):
         try:
@@ -939,7 +825,7 @@ with tab_overview:
                          .head(5))
             top_items["Support"] = top_items["Support"].apply(lambda x: _fmt_pct(x, 2))
 
-    # Strongest pairs (quick teaser)
+    #Strongest pairs (quick teaser)
     n_pairs = len(pairs) if isinstance(pairs, pd.DataFrame) else 0
     top_pairs_view = pd.DataFrame()
     if n_pairs:
@@ -954,10 +840,10 @@ with tab_overview:
         top_pairs_view["Joint count"] = top_pairs_view["Joint count"].apply(_fmt_num)
 
     # ---- layout cards ----
-    c1, c2, c3 = st.columns([1.1, 1, 1])
+    c1, c2 = st.columns([1.1, 1])
 
     with c1:
-        st.markdown("##### 👥 Largest Persona")
+        st.markdown("##### 👥 Key Persona at Churn Risk ")
         if biggest:
             name = biggest.get("name", "(unnamed)")
             size = biggest.get("size", 0)
@@ -985,45 +871,15 @@ with tab_overview:
             st.info("No personas found. Upload `personas.json` to enable persona insights.")
 
     with c2:
-        st.markdown("##### 🌟 Top Products by Reach")
-        if not top_items.empty:
-            st.dataframe(top_items, use_container_width=True, hide_index=True)
-        else:
-            st.info("No frequent singletons found (or `freq` not loaded).")
-
-    with c3:
         st.markdown("##### 🔗 Strongest Co-purchase Signals")
         if not top_pairs_view.empty:
             st.dataframe(top_pairs_view, use_container_width=True, hide_index=True)
         else:
             st.info("No pairs available. Export `pairs.csv` from Colab.")
 
-    # Optional: a compact narrative under the cards
-    bullets = []
-    if biggest:
-        bullets.append(
-            f"- Largest persona **{biggest.get('name','(unnamed)')}** with **{_fmt_num(biggest.get('size',0))}** customers."
-        )
-    if not top_items.empty:
-        bullets.append(
-            "- Top reach items: " + ", ".join(f"{r['Product']} ({r['Support']})" for _, r in top_items.iterrows())
-        )
-    if not top_pairs_view.empty:
-        bullets.append(
-            "- Strongest pairs: " +
-            "; ".join(f"{r['Item A']} ↔ {r['Item B']} (J={r['Jaccard']}, sup={r['Support']})"
-                      for _, r in top_pairs_view.iterrows())
-        )
-
-    st.markdown(
-        ("<div style='margin-top:10px'>" + "<br>".join(bullets) + "</div>") if bullets
-        else "_No summary available. Upload personas.json, pairs.csv, basket_stats.json._",
-        unsafe_allow_html=True
-    )
-
 # ============== PERSONAS =================
 with tab_personas:
-    st.markdown("### Personas")
+    st.markdown("### Clustered Personas")
 
     if not personas:
         st.info("No personas found. Upload `personas.json` from Colab.")
@@ -1143,8 +999,7 @@ with tab_pairs:
 
 # ============== ROI =====================
 with tab_roi:
-    import numpy as np
-    import plotly.express as px
+    st.markdown("Update the values for a personalized ROI forecast")
 
     # Persona prefill
     pcol1, _ = st.columns([2, 1])
@@ -1211,6 +1066,4 @@ with tab_roi:
                hover_data=["ROI %","Incremental revenue","Uplift %"], title="ROI Scenarios"),
         use_container_width=True
     )
-
-
 
