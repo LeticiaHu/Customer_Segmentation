@@ -1,0 +1,3 @@
+Cluster,Recency,Frequency,Monetary,AvgOrderValue,UniqueProducts,TotalTransactions,ProductDiversity,AvgItemPrice,ReturnsRate,DiscountUsage,CategoryDiversity
+0,1035.21,1.0,2334.99,2334.99,1.0,1.0,1.0,73.69,0.0,0.25,1.0
+1,1037.91,1.0,573.4,573.4,1.0,1.0,1.0,36.58,0.0,0.25,1.0

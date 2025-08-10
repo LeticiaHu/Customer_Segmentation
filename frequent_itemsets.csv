@@ -1,0 +1,67 @@
+support,itemsets
+0.09477027119650895,frozenset({'Wall Clock'})
+0.0941990906806187,frozenset({'USB Cable'})
+0.09413054901871187,frozenset({'Backpack'})
+0.09365075738536408,frozenset({'Desk Lamp'})
+0.09323950741392309,frozenset({'White Mug'})
+0.09259978523612603,frozenset({'Office Chair'})
+0.09257693801549041,frozenset({'Headphones'})
+0.09241700747104115,frozenset({'T-shirt'})
+0.09202860472023579,frozenset({'Blue Pen'})
+0.0915945075281592,frozenset({'Notebook'})
+0.09054353537892115,frozenset({'Wireless Mouse'})
+0.0005940277365258516,"frozenset({'Office Chair', 'Desk Lamp'})"
+0.000571180515890242,"frozenset({'Notebook', 'Blue Pen'})"
+0.0005483332952546323,"frozenset({'White Mug', 'Headphones'})"
+0.0005483332952546323,"frozenset({'Notebook', 'T-shirt'})"
+0.0005483332952546323,"frozenset({'Wall Clock', 'Headphones'})"
+0.0005254860746190226,"frozenset({'White Mug', 'Desk Lamp'})"
+0.0005254860746190226,"frozenset({'T-shirt', 'White Mug'})"
+0.0005026388539834129,"frozenset({'USB Cable', 'Headphones'})"
+0.0005026388539834129,"frozenset({'T-shirt', 'USB Cable'})"
+0.0005026388539834129,"frozenset({'Wall Clock', 'Backpack'})"
+0.0004797916333478032,"frozenset({'Office Chair', 'Headphones'})"
+0.0004797916333478032,"frozenset({'Blue Pen', 'USB Cable'})"
+0.0004797916333478032,"frozenset({'USB Cable', 'Desk Lamp'})"
+0.0004797916333478032,"frozenset({'T-shirt', 'Wireless Mouse'})"
+0.0004797916333478032,"frozenset({'T-shirt', 'Wall Clock'})"
+0.00045694441271219356,"frozenset({'Notebook', 'Wireless Mouse'})"
+0.00045694441271219356,"frozenset({'Headphones', 'Backpack'})"
+0.00045694441271219356,"frozenset({'Notebook', 'USB Cable'})"
+0.00045694441271219356,"frozenset({'Office Chair', 'White Mug'})"
+0.00045694441271219356,"frozenset({'Notebook', 'Desk Lamp'})"
+0.00045694441271219356,"frozenset({'T-shirt', 'Desk Lamp'})"
+0.0004340971920765839,"frozenset({'White Mug', 'Backpack'})"
+0.0004340971920765839,"frozenset({'Blue Pen', 'White Mug'})"
+0.0004340971920765839,"frozenset({'Wireless Mouse', 'USB Cable'})"
+0.0004112499714409742,"frozenset({'Blue Pen', 'Headphones'})"
+0.0004112499714409742,"frozenset({'T-shirt', 'Blue Pen'})"
+0.0004112499714409742,"frozenset({'Blue Pen', 'Backpack'})"
+0.0004112499714409742,"frozenset({'Office Chair', 'T-shirt'})"
+0.00038840275080536453,"frozenset({'Office Chair', 'Wireless Mouse'})"
+0.00038840275080536453,"frozenset({'Wireless Mouse', 'Headphones'})"
+0.00038840275080536453,"frozenset({'Wireless Mouse', 'White Mug'})"
+0.00038840275080536453,"frozenset({'Notebook', 'White Mug'})"
+0.00038840275080536453,"frozenset({'Notebook', 'Wall Clock'})"
+0.00038840275080536453,"frozenset({'Office Chair', 'Backpack'})"
+0.0003655555301697548,"frozenset({'Office Chair', 'Blue Pen'})"
+0.0003655555301697548,"frozenset({'Wall Clock', 'Blue Pen'})"
+0.0003655555301697548,"frozenset({'Notebook', 'Headphones'})"
+0.0003655555301697548,"frozenset({'Wireless Mouse', 'Desk Lamp'})"
+0.00034270830953414517,"frozenset({'Wireless Mouse', 'Backpack'})"
+0.00034270830953414517,"frozenset({'Office Chair', 'Wall Clock'})"
+0.00034270830953414517,"frozenset({'Wall Clock', 'USB Cable'})"
+0.0003198610888985355,"frozenset({'Desk Lamp', 'Backpack'})"
+0.0003198610888985355,"frozenset({'Notebook', 'Office Chair'})"
+0.0003198610888985355,"frozenset({'USB Cable', 'Backpack'})"
+0.0002970138682629258,"frozenset({'Notebook', 'Backpack'})"
+0.0002970138682629258,"frozenset({'Blue Pen', 'Desk Lamp'})"
+0.0002970138682629258,"frozenset({'Desk Lamp', 'Headphones'})"
+0.0002970138682629258,"frozenset({'Wall Clock', 'White Mug'})"
+0.00027416664762731615,"frozenset({'T-shirt', 'Backpack'})"
+0.00027416664762731615,"frozenset({'T-shirt', 'Headphones'})"
+0.00025131942699170643,"frozenset({'White Mug', 'USB Cable'})"
+0.00025131942699170643,"frozenset({'Office Chair', 'USB Cable'})"
+0.00022847220635609678,"frozenset({'Wall Clock', 'Desk Lamp'})"
+0.00022847220635609678,"frozenset({'Wall Clock', 'Wireless Mouse'})"
+0.0002056249857204871,"frozenset({'Wireless Mouse', 'Blue Pen'})"

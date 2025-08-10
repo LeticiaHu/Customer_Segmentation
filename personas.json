@@ -1,0 +1,38 @@
+{
+  "0": {
+    "name": "High-Value, Recent Buyers",
+    "description": "Customers who have purchased recently and spent a significant amount.",
+    "size": 8478,
+    "metrics": {
+      "Recency": 1035.21,
+      "Frequency": 1.0,
+      "Monetary": 2334.99,
+      "AvgOrderValue": 2334.99,
+      "UniqueProducts": 1.0,
+      "TotalTransactions": 1.0,
+      "ProductDiversity": 1.0,
+      "AvgItemPrice": 73.69,
+      "ReturnsRate": 0.0,
+      "DiscountUsage": 0.25,
+      "CategoryDiversity": 1.0
+    }
+  },
+  "1": {
+    "name": "At Risk, Low Engagement",
+    "description": "Customers who haven't purchased recently and have low spending.",
+    "size": 15639,
+    "metrics": {
+      "Recency": 1037.91,
+      "Frequency": 1.0,
+      "Monetary": 573.4,
+      "AvgOrderValue": 573.4,
+      "UniqueProducts": 1.0,
+      "TotalTransactions": 1.0,
+      "ProductDiversity": 1.0,
+      "AvgItemPrice": 36.58,
+      "ReturnsRate": 0.0,
+      "DiscountUsage": 0.25,
+      "CategoryDiversity": 1.0
+    }
+  }
+}
