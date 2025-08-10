@@ -21,34 +21,30 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Make titles + text scale nicely on mobile
 st.markdown("""
 <style>
-    .metric-card {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        color: white;
-        text-align: center;
-        margin: 0.5rem 0;
-    }
-    .stMetric > label { font-size: 14px !important; font-weight: bold; }
-    .main-header {
-        text-align: center;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 2rem;
-    }
-    #MainMenu, footer {visibility: hidden;}
-    .big-font { font-size: 2.2rem; font-weight: bold; color: #2E86C1; text-align: center; padding: 1rem 0; }
-    @media only screen and (max-width: 600px) {
-        .big-font { font-size: 1.5rem !important; }
-        .css-1d391kg, .css-18e3th9 { padding: 0.5rem !important; }
-    }
+:root{
+  --h1: clamp(1.25rem, 5vw, 1.75rem);  /* title */
+  --h2: clamp(1.10rem, 4.2vw, 1.50rem);/* header */
+  --h3: clamp(1.00rem, 3.6vw, 1.25rem);/* subheader */
+  --body: clamp(0.95rem, 3.0vw, 1.00rem);
+}
+html, body, .stMarkdown p { font-size: var(--body); }
+
+h1, .stMarkdown h1 { font-size: var(--h1); line-height:1.15; margin:.2em 0 .4em; }
+h2, .stMarkdown h2 { font-size: var(--h2); line-height:1.20; margin:.15em 0 .3em; }
+h3, .stMarkdown h3 { font-size: var(--h3); line-height:1.25; margin:.15em 0 .25em; }
+
+/* Tabs & spacing */
+.stTabs [data-baseweb="tab"] { font-size: clamp(.85rem, 3vw, .95rem); padding:.4rem .6rem; }
+.block-container { padding: .75rem .75rem 1rem; } /* less side padding on phones */
+
+/* Tables a bit tighter */
+.stDataFrame thead th, .stDataFrame tbody td { font-size: .90rem; }
 </style>
 """, unsafe_allow_html=True)
+
 
 with st.expander("### ℹ️ How to Use This Dashboard", expanded=True):
     st.markdown("""
@@ -1191,4 +1187,5 @@ with tab_roi:
                hover_data=["ROI %","Incremental revenue","Uplift %"], title="ROI Scenarios"),
         use_container_width=True
     )
+
 
