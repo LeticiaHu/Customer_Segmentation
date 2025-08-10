@@ -51,20 +51,6 @@ python -m venv .venv
 pip install -r requirements.txt
 
 - Minimal requirements.txt (Can be found on repository)
-  
-streamlit==1.37.1
-
-pandas==2.2.2
-
-numpy==1.26.4
-
-scikit-learn==1.5.1
-
-mlxtend==0.23.1
-
-plotly==5.22.0
-
-joblib==1.4.2
 
 
 ## Dataset Overview
@@ -76,23 +62,24 @@ Time Period: January 2020 – May 2025
 
 Size: 49,782 transactions
 
-You can replace the path/loader in the app to point to your local copy of the dataset.
+You can point the app to your local CSV or use the copy included in /data.
 
 ## Expected columns
-- Your CSV should include (at minimum):
-
+- At minimum, the CSV should contain:
 CustomerID, InvoiceDate, Quantity, UnitPrice, StockCode, Description
 
-- The app will create/expect derived features like:
-
-Recency, Frequency, Monetary, UniqueProducts, TotalTransactions,
-ProductDiversity, AvgItemPrice, ReturnsRate, DiscountUsage, CategoryDiversity
+- The app derives/uses features such as:
+Recency, Frequency, Monetary, UniqueProducts, TotalTransactions, ProductDiversity, AvgItemPrice, ReturnsRate, DiscountUsage, CategoryDiversity
 
 ## Download precomputed files
 Run your data on the Juptier notebook and save all the files to use on Streamlit app 
 
 ## Run the app
 streamlit run app.py
+
+## Disclaimer
+
+Support and confidence values may appear low because the dataset contains a large proportion of one-time customers. This creates a sparse basket matrix, so even meaningful co-purchases occur in a very small fraction of transactions.
 
 ## Acknowledgements
 - This project draws on course materials by Prof. Mr. Avinash Jairam (CIS 9660 – Data Mining for Business Analytics) for parts of the preprocessing and modeling setup.
