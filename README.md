@@ -12,11 +12,13 @@ A Streamlit + Python project that uses unsupervised learning (K-Means and hierar
 
 - Cluster 0 — High-Value (Lapsed)
 Goal: Re-engage high spenders who haven’t purchased recently.
+
 Actions: Win-back offers, personalized recommendations, limited-time discounts, short survey to identify barriers.
 Potential Revenue Impact: $4,949,011.
 
 - Cluster 1 — At-Risk, Low Engagement
 Goal: Nurture and activate newer/low-engagement customers.
+
 Actions: Welcome/onboarding sequences, first-purchase discounts or bundles, highlight best-sellers & reviews, tips/guides to build trust.
 Potential Revenue Impact: $2,241,851.
 
