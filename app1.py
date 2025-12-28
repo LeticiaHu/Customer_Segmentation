@@ -487,7 +487,7 @@ with t2:
                 return out[cols]
             return pd.DataFrame(columns=cols)
 
-        # Non-empty basket: match rules where antecedents ⊆ basket
+        # Non-empty basket: match rules where antecedents basket
         S = set(items)
         cand = rules_df[rules_df[ante_col].apply(lambda A: A.issubset(S))].copy()
         if cand.empty:
@@ -654,7 +654,7 @@ with t4:
         st.info("Rules file missing required metric columns to plot (need support, confidence, lift).")
 
 st.markdown("## 📈 Business Intelligence Summary")
-# ===== BI data bootstrap (put this ABOVE the BI tabs) =====
+# ===== BI data bootstrap =====
 
 @st.cache_data
 def load_personas(path="personas.json"):
@@ -792,7 +792,7 @@ with tab_overview:
     k3.metric("Multi-item share", kpi_value(multi_item_share, "{:.1%}"))
     k4.metric("Avg basket size",  kpi_value(avg_basket_size,  "{:.2f}"))
     # -------------------
-    # Executive Summary (polished)
+    # Executive Summary 
     # -------------------
     st.markdown("### Executive Summary")
     # Safe helpers
@@ -1066,4 +1066,5 @@ with tab_roi:
                hover_data=["ROI %","Incremental revenue","Uplift %"], title="ROI Scenarios"),
         use_container_width=True
     )
+
 
